@@ -29,7 +29,7 @@ ingester:
 schema_config:
   configs:
   - from: 2020-10-24
-    store: boltdb-shipper
+    store: boltdb
     object_store: filesystem
     schema: v11
     index:
@@ -45,10 +45,10 @@ schema_config:
     schema: v13
     index:
       prefix: index_
-      period: {{ loki_config_period }}
+      period: 24h
     chunks:
       prefix: chunk_
-      period: {{ loki_config_period }}
+      period: 24h
 
 storage_config:
   tsdb_shipper:
@@ -57,6 +57,9 @@ storage_config:
 
   filesystem:
     directory: {{ loki_config_store }}/chunks
+
+compactor:
+  working_directory: {{ loki_config_store }}/compactor
 
 limits_config:
   reject_old_samples: true
