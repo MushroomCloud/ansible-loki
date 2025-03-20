@@ -25,10 +25,20 @@ ingester:
   max_chunk_age: 1h           # All chunks will be flushed when they hit this age, default is 1h
   chunk_target_size: 1048576  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
   chunk_retain_period: 20m    # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
-  max_transfer_retries: 0     # Chunk transfers disabled
 
 schema_config:
   configs:
+  - from: 2020-10-24
+    store: boltdb-shipper
+    object_store: filesystem
+    schema: v11
+    index:
+      prefix: index_
+      period: {{ loki_config_period }}
+    chunks:
+      prefix: chunk_
+      period: {{ loki_config_period }}
+
   - from: 2025-03-20
     store: tsdb
     object_store: filesystem
@@ -49,7 +59,6 @@ storage_config:
     directory: {{ loki_config_store }}/chunks
 
 limits_config:
-  enforce_metric_name: false
   reject_old_samples: true
   reject_old_samples_max_age: {{ loki_config_period }}
   max_query_series: 100000
@@ -64,12 +73,12 @@ limits_config:
   split_queries_by_interval: 15m
 
 chunk_store_config:
-  max_look_back_period: {{ loki_config_period }}
   cache_lookups_older_than: 24h
   chunk_cache_config:
-    enable_fifocache: true
-    fifocache:
-      max_size_bytes: 2048000000
+    embedded_cache:
+      enabled: true
+      max_size_mb: 500
+      ttl: 24h
 
 table_manager:
   index_tables_provisioning:
@@ -96,7 +105,6 @@ query_range:
 
 querier:
   max_concurrent: 4096
-  query_timeout: 5m
   extra_query_delay: 30s
   engine:
     timeout: 5m
