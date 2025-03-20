@@ -29,10 +29,10 @@ ingester:
 
 schema_config:
   configs:
-  - from: 2020-10-24
-    store: boltdb
+  - from: 2025-0330-
+    store: tsdb
     object_store: filesystem
-    schema: v11
+    schema: v13
     index:
       prefix: index_
       period: {{ loki_config_period }}
@@ -41,8 +41,9 @@ schema_config:
       period: {{ loki_config_period }}
 
 storage_config:
-  boltdb:
-    directory: {{ loki_config_store }}/index
+  tsdb_shipper:
+    active_index_directory: {{ loki_config_store }}/tsdb-index
+    cache_location: {{ loki_config_store }}/tsdb-cache
 
   filesystem:
     directory: {{ loki_config_store }}/chunks
