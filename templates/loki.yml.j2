@@ -28,17 +28,6 @@ ingester:
 
 schema_config:
   configs:
-  - from: 2020-10-24
-    store: boltdb
-    object_store: filesystem
-    schema: v11
-    index:
-      prefix: index_
-      period: {{ loki_config_period }}
-    chunks:
-      prefix: chunk_
-      period: {{ loki_config_period }}
-
   - from: 2025-03-20
     store: tsdb
     object_store: filesystem
