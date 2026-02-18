@@ -11,7 +11,7 @@ __loki_go_os_map:
   # solaris
   suse: linux
 
-__loki_go_os: "{{ __loki_go_os_map[ansible_os_family | lower] | default('linux') }}"
+__loki_go_os: "{{ __loki_go_os_map[ansible_facts['os_family'] | lower] | default('linux') }}"
 
 __loki_go_arch_map:
   i386: '386'
@@ -20,7 +20,7 @@ __loki_go_arch_map:
   armv7l: 'armv7'
   armv6l: 'armv6'
 
-__loki_go_arch: "{{ __loki_go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+__loki_go_arch: "{{ __loki_go_arch_map[ansible_facts['architecture']] | default(ansible_facts['architecture']) }}"
 
 __loki_download_github: "https://github.com/grafana/loki/releases/download"
 
